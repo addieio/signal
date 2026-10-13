@@ -39,9 +39,9 @@ export const DEMO_DISCORD_FRIENDS: DiscordFriend[] = [
     status: "online",
     attendingEventSlugs: [
       "devfolio-nexhack-2",
-      "devfolio-hacknauts-20",
+      "devfolio-hacknauts26",
       "unstop-nexhack-3-0-build-what-s-next",
-      "the-outpost",
+      "unstop-the-outpost",
     ],
     college: "IIT Delhi",
     tagline: "Fullstack & Rust builder",
@@ -55,7 +55,7 @@ export const DEMO_DISCORD_FRIENDS: DiscordFriend[] = [
     attendingEventSlugs: [
       "devfolio-nexhack-2",
       "unstop-codewithchat-ai-dev-challenge-build-launch-monetize-with-vibe-coding",
-      "devfolio-hacknauts-20",
+      "devfolio-hacknauts26",
     ],
     college: "IIIT Delhi",
     tagline: "AI / Agentic systems",
@@ -68,8 +68,8 @@ export const DEMO_DISCORD_FRIENDS: DiscordFriend[] = [
     status: "idle",
     attendingEventSlugs: [
       "devfolio-nexhack-2",
-      "hackbios-2k26",
-      "the-outpost",
+      "devfolio-hackbios2k26",
+      "unstop-the-outpost",
     ],
     college: "DTU Delhi",
     tagline: "Competitive Programmer & Frontend",
@@ -82,7 +82,7 @@ export const DEMO_DISCORD_FRIENDS: DiscordFriend[] = [
     status: "dnd",
     attendingEventSlugs: [
       "devfolio-nexhack-2",
-      "devfolio-hacknauts-20",
+      "devfolio-hacknauts26",
       "unstop-nexhack-3-0-build-what-s-next",
     ],
     college: "NSUT Delhi",
@@ -97,7 +97,7 @@ export const DEMO_DISCORD_FRIENDS: DiscordFriend[] = [
     attendingEventSlugs: [
       "devfolio-nexhack-2",
       "unstop-codewithchat-ai-dev-challenge-build-launch-monetize-with-vibe-coding",
-      "the-outpost",
+      "unstop-the-outpost",
     ],
     college: "IIIT Delhi",
     tagline: "Distributed systems & Web3",
@@ -144,17 +144,23 @@ export const useDiscordStore = create<DiscordState>()(
         if (!get().isConnected) return [];
         const cleanSlug = eventSlugOrId.toLowerCase();
         return get().friends.filter((f) =>
-          f.attendingEventSlugs.some(
-            (slug) =>
-              cleanSlug.includes(slug) ||
-              slug.includes(cleanSlug) ||
-              cleanSlug.includes("nexhack") && slug.includes("nexhack")
-          )
+          f.attendingEventSlugs.some((slug) => {
+            const s = slug.toLowerCase();
+            return (
+              cleanSlug === s ||
+              cleanSlug.includes(s) ||
+              s.includes(cleanSlug) ||
+              (cleanSlug.includes("nexhack") && s.includes("nexhack")) ||
+              (cleanSlug.includes("outpost") && s.includes("outpost")) ||
+              (cleanSlug.includes("hacknaut") && s.includes("hacknaut")) ||
+              (cleanSlug.includes("bios") && s.includes("bios"))
+            );
+          })
         );
       },
     }),
     {
-      name: "signal-discord-demo-storage",
+      name: "signal-discord-demo-storage-v2",
     }
   )
 );
