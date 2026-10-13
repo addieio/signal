@@ -24,20 +24,20 @@ export function GoogleAuthButton() {
   return (
     <>
       {user ? (
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-surface2 px-2.5 py-1.5 text-xs font-bold text-text hover:border-peri/40 transition cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-white/10 bg-surface2 px-2 sm:px-2.5 py-1.5 text-xs font-bold text-text hover:border-peri/40 transition cursor-pointer shadow-xs shrink-0"
           >
             {user.avatarUrl ? (
               <img
                 src={user.avatarUrl}
                 alt={user.name}
-                className="h-6 w-6 rounded-full object-cover ring-1 ring-peri/50"
+                className="h-5 w-5 sm:h-6 sm:w-6 rounded-full object-cover ring-1 ring-peri/50 shrink-0"
               />
             ) : (
-              <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold">
+              <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold shrink-0">
                 {user.name[0]?.toUpperCase()}
               </div>
             )}
@@ -74,7 +74,7 @@ export function GoogleAuthButton() {
         <button
           type="button"
           onClick={handleLoginClick}
-          className="inline-flex min-h-9 sm:min-h-10 items-center gap-2 rounded-xl border border-white/12 bg-white px-3 sm:px-3.5 text-xs font-bold text-gray-900 shadow-sm hover:bg-gray-100 transition active:scale-95 cursor-pointer"
+          className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 sm:gap-2 rounded-xl border border-white/12 bg-white px-2.5 sm:px-3.5 text-xs font-bold text-gray-900 shadow-sm hover:bg-gray-100 transition active:scale-95 cursor-pointer shrink-0"
           title="Sign in with Google via Supabase"
         >
           <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@ export function GoogleAuthButton() {
             />
           </svg>
           <span className="hidden sm:inline">Google Login</span>
-          <span className="sm:hidden">Login</span>
+          <span className="sm:hidden text-[11px]">Login</span>
         </button>
       )}
 

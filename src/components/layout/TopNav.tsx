@@ -65,8 +65,8 @@ export function TopNav() {
           })}
         </nav>
 
-        {/* Right Actions: Theme Toggle & Preferences */}
-        <div className="flex items-center gap-2">
+        {/* Right Actions: Theme Toggle, Discord, Google Auth & Preferences */}
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           {/* Supabase Google Auth Button */}
           <GoogleAuthButton />
 
@@ -79,7 +79,7 @@ export function TopNav() {
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-surface2 text-text hover:border-peri/40 transition active:scale-95 cursor-pointer shadow-sm"
+            className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-white/10 bg-surface2 text-text hover:border-peri/40 transition active:scale-95 cursor-pointer shadow-sm shrink-0"
           >
             <motion.div
               key={theme}
@@ -88,19 +88,19 @@ export function TopNav() {
               transition={{ duration: 0.2 }}
             >
               {theme === "dark" ? (
-                <Sun className="h-4.5 w-4.5 text-amber-300" />
+                <Sun className="h-4 w-4 text-amber-300" />
               ) : (
-                <Moon className="h-4.5 w-4.5 text-indigo-600" />
+                <Moon className="h-4 w-4 text-indigo-600" />
               )}
             </motion.div>
           </button>
 
           <Link
             href="/onboarding"
-            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-primary px-4 text-xs font-bold text-white transition hover:bg-primary-hover shadow-md shadow-primary/20 active:scale-95"
+            className="hidden sm:inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 rounded-xl bg-primary px-3 sm:px-4 text-xs font-bold text-white transition hover:bg-primary-hover shadow-md shadow-primary/20 active:scale-95 shrink-0"
           >
-            <Sparkles className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Preferences</span>
+            <Sparkles className="h-3.5 w-3.5 shrink-0" />
+            <span>Preferences</span>
           </Link>
         </div>
       </div>
