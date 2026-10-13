@@ -21,6 +21,8 @@ import { useProfileStore } from "@/store/profileStore";
 import { useCompareStore } from "@/store/compareStore";
 import { computeRanking } from "@/lib/ranking";
 import { GradientPoster } from "@/components/GradientPoster";
+import { FormattedOverview } from "@/components/FormattedOverview";
+import { DiscordFriendsBadge } from "@/components/DiscordFriendsBadge";
 
 function FactCard({
   icon: Icon,
@@ -190,8 +192,13 @@ export default function EventPage() {
           </div>
         </div>
 
+        {/* Discord Friends Attending Radar (Demo) */}
+        <div className="mt-8">
+          <DiscordFriendsBadge eventSlugOrId={event.slug} variant="detail" />
+        </div>
+
         {/* Detailed Grid of Facts */}
-        <section className="mt-12">
+        <section className="mt-8">
           <h2 className="font-display text-xl font-bold text-text mb-6">
             Detailed Verified Specifications
           </h2>
@@ -225,10 +232,13 @@ export default function EventPage() {
 
         {/* Full Overview Description */}
         <section className="mt-8 rounded-3xl border border-white/8 bg-surface p-6 sm:p-8">
-          <h3 className="font-display text-lg font-bold text-text mb-3">About this Event</h3>
-          <p className="text-sm leading-relaxed text-muted whitespace-pre-line">
-            {event.description || event.blurb}
-          </p>
+          <h3 className="font-display text-lg font-bold text-text mb-6">About this Event</h3>
+          <FormattedOverview
+            text={event.description}
+            blurb={event.blurb}
+            title={event.title}
+            mode="full"
+          />
 
           {/* Themes / Tracks */}
           <div className="mt-6 border-t border-white/8 pt-6">

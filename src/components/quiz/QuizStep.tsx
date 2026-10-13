@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Sparkles, Zap, Radio } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 
 export interface QuizOption {
   id: string;
@@ -30,14 +30,14 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.05,
+      staggerChildren: 0.03,
+      delayChildren: 0.04,
     },
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 16, scale: 0.98 },
+  hidden: { opacity: 0, y: 12, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
@@ -67,16 +67,21 @@ export function QuizStep({
   const isMulti = maxSelect > 1;
   const progressPercent = Math.round(((stepIndex + 1) / totalSteps) * 100);
 
-  // 3 options per row across mobile and desktop
-  const gridClass = "grid-cols-3";
+  // Responsive grid based on option count so text is never cramped or truncated
+  const gridClass =
+    options.length <= 3
+      ? "grid-cols-1 sm:grid-cols-3"
+      : options.length <= 6
+      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
   return (
     <motion.div
       key={`step-${stepIndex}`}
-      initial={{ opacity: 0, x: 22 }}
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -22 }}
-      transition={{ duration: 0.28, ease: "easeOut" }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
       className="w-full flex flex-col justify-between"
     >
       <div>
@@ -118,7 +123,7 @@ export function QuizStep({
         <div className="w-full h-1.5 bg-surface2 rounded-full overflow-hidden mb-6 border border-white/8 relative">
           <motion.div
             className="h-full bg-gradient-to-r from-primary via-peri to-lime rounded-full shadow-sm shadow-lime/30"
-            initial={{ width: `${Math.max(0, ((stepIndex) / totalSteps) * 100)}%` }}
+            initial={{ width: `${Math.max(0, (stepIndex / totalSteps) * 100)}%` }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           />
@@ -164,12 +169,12 @@ export function QuizStep({
           </p>
         </div>
 
-        {/* Symmetrical Options Grid */}
+        {/* Spacious, Fully Visible Options Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className={`grid ${gridClass} gap-1.5 sm:gap-3.5 mb-6 sm:mb-8`}
+          className={`grid ${gridClass} gap-3 sm:gap-4 mb-6 sm:mb-8`}
         >
           {options.map((opt) => {
             const isSelected = selectedIds.includes(opt.id);
@@ -182,55 +187,57 @@ export function QuizStep({
                 type="button"
                 onClick={() => onSelect(opt.id)}
                 aria-pressed={isSelected}
-                className={`group relative text-left p-2 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between select-none h-full min-h-[85px] sm:min-h-[110px] ${
+                className={`group relative text-left p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between select-none h-full min-h-[105px] sm:min-h-[120px] ${
                   isSelected
                     ? "bg-gradient-to-br from-primary/20 via-primary/10 to-peri/15 border-primary shadow-lg shadow-primary/20 ring-2 ring-primary/40 text-text"
                     : "bg-surface2/70 hover:bg-surface2 hover:border-peri/40 border-white/8 text-text shadow-sm backdrop-blur-xs"
                 }`}
               >
-                <div>
-                  {/* Top: Icon + Label + Checkbox */}
-                  <div className="flex items-start justify-between gap-1 sm:gap-2.5 mb-1 sm:mb-2">
-                    <div className="flex items-center gap-1 sm:gap-2.5 min-w-0">
-                      {opt.icon && (
-                        <div
-                          className={`w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center text-sm sm:text-lg shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
-                            isSelected
-                              ? "bg-primary/30 border-primary text-white shadow-xs"
-                              : "bg-surface border-white/10 text-text"
-                          }`}
-                        >
-                          {opt.icon}
-                        </div>
-                      )}
-                      <span
-                        className={`font-display font-bold text-xs sm:text-sm leading-tight sm:leading-snug line-clamp-1 transition-colors ${
-                          isSelected ? "text-peri" : "text-text"
+                <div className="w-full">
+                  {/* Top Row: Icon on left + Checkbox on right */}
+                  <div className="flex items-center justify-between w-full mb-2.5">
+                    {opt.icon ? (
+                      <div
+                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-base sm:text-lg shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
+                          isSelected
+                            ? "bg-primary/30 border-primary text-white shadow-xs"
+                            : "bg-surface border-white/10 text-text"
                         }`}
                       >
-                        {opt.label}
-                      </span>
-                    </div>
+                        {opt.icon}
+                      </div>
+                    ) : (
+                      <div />
+                    )}
 
                     {/* Circular Check Indicator */}
                     <div
-                      className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border transition-all shrink-0 mt-0.5 ${
+                      className={`w-5 h-5 rounded-full flex items-center justify-center border transition-all shrink-0 ${
                         isSelected
                           ? "bg-primary border-primary text-white shadow-sm shadow-primary/40 scale-105"
                           : "border-white/20 bg-surface/80 group-hover:border-peri/50"
                       }`}
                     >
                       {isSelected ? (
-                        <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
+                        <Check className="w-3 h-3 stroke-[3]" />
                       ) : (
-                        <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white/20" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
                       )}
                     </div>
                   </div>
 
-                  {/* Bottom: Description */}
+                  {/* Full Visible Option Label (NO line-clamp) */}
+                  <h3
+                    className={`font-display font-bold text-xs sm:text-sm leading-snug break-words transition-colors ${
+                      isSelected ? "text-peri" : "text-text"
+                    }`}
+                  >
+                    {opt.label}
+                  </h3>
+
+                  {/* Full Visible Option Description (NO line-clamp) */}
                   {opt.description && (
-                    <p className="text-[10px] sm:text-xs text-muted leading-tight sm:leading-relaxed line-clamp-2 mt-0.5 sm:mt-1">
+                    <p className="text-[11px] sm:text-xs text-muted leading-relaxed mt-1 break-words">
                       {opt.description}
                     </p>
                   )}
@@ -240,7 +247,7 @@ export function QuizStep({
                 {isSelected && (
                   <motion.div
                     layoutId="selectedGlow"
-                    className="absolute -bottom-px left-2 right-2 sm:left-4 sm:right-4 h-0.5 bg-gradient-to-r from-peri via-lime to-primary rounded-full"
+                    className="absolute -bottom-px left-3 right-3 sm:left-4 sm:right-4 h-0.5 bg-gradient-to-r from-peri via-lime to-primary rounded-full"
                   />
                 )}
               </motion.button>

@@ -18,6 +18,7 @@ import type { Event, RankingResult } from "@/lib/types";
 import { GradientPoster } from "./GradientPoster";
 import { MatchRing } from "./MatchRing";
 import { WhyRankModal } from "./WhyRankModal";
+import { DiscordFriendsBadge } from "./DiscordFriendsBadge";
 import { useCompareStore } from "@/store/compareStore";
 
 interface EventCardProps {
@@ -148,6 +149,9 @@ export function EventCard({ event, ranking, rankNumber, isPreferredHub }: EventC
               </span>
             ))}
           </div>
+
+          {/* Discord Friends Attending (Demo) */}
+          <DiscordFriendsBadge eventSlugOrId={event.slug} variant="card" />
 
           {/* Interactive Signal Ranking Strip with MatchRing */}
           <div

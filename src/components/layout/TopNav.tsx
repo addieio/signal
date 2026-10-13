@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Bot, Compass, Medal, Moon, Scale, Search, Sparkles, Sun } from "lucide-react";
 import { useCompareStore } from "@/store/compareStore";
 import { useTheme } from "@/components/ThemeProvider";
+import { DiscordNavButton } from "@/components/DiscordNavButton";
 
 export function TopNav() {
   const pathname = usePathname();
@@ -65,6 +66,9 @@ export function TopNav() {
 
         {/* Right Actions: Theme Toggle & Preferences */}
         <div className="flex items-center gap-2.5">
+          {/* Discord Squad Presence (Demo) */}
+          <DiscordNavButton />
+
           {/* Dark / Light Mode Toggle Button */}
           <button
             type="button"

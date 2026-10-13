@@ -268,7 +268,7 @@ export default function OnboardingPage() {
       <div className="absolute inset-0 grid-bg opacity-40 pointer-events-none" />
 
       {/* Top Header with Theme Toggle & Return Link */}
-      <div className="w-full max-w-3xl mb-4 sm:mb-6 flex items-center justify-between px-1 relative z-20">
+      <div className="w-full max-w-4xl mb-4 sm:mb-6 flex items-center justify-between px-1 relative z-20">
         <Link href="/home" className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center font-bold text-white text-base font-display shadow-lg shadow-primary/30 group-hover:scale-105 transition-transform">
             S
@@ -310,7 +310,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Main Glassmorphic Card Container */}
-      <div className="w-full max-w-3xl relative z-10">
+      <div className="w-full max-w-4xl relative z-10">
         <AnimatePresence mode="wait">
           {!isCompleted ? (
             <motion.div

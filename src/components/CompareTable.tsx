@@ -19,6 +19,8 @@ import {
 import type { Event, UserProfile } from "@/lib/types";
 import { computeRanking } from "@/lib/ranking";
 import { GradientPoster } from "./GradientPoster";
+import { FormattedOverview } from "./FormattedOverview";
+import { DiscordFriendsBadge } from "./DiscordFriendsBadge";
 
 interface CompareTableProps {
   events: Event[];
@@ -105,6 +107,11 @@ export function CompareTable({ events, profile, onRemove }: CompareTableProps) {
                     </span>
                   </div>
                   <p className="mt-1 text-xs text-slate-300 leading-relaxed">{fit.reasons[0]}</p>
+                </div>
+
+                {/* Discord Friends Attending (Demo) */}
+                <div className="mt-2">
+                  <DiscordFriendsBadge eventSlugOrId={event.slug} variant="card" />
                 </div>
 
                 {/* Direct Official Link */}
@@ -361,22 +368,49 @@ export function CompareTable({ events, profile, onRemove }: CompareTableProps) {
         </div>
       </section>
 
-      {/* SECTION 6: Description */}
+      {/* SECTION 6: Campus Network & Squad (Discord Demo) */}
       <section className="overflow-hidden rounded-2xl border border-white/8 bg-surface shadow-lg">
-        <div className="border-b border-white/8 bg-surface2/50 px-6 py-4 flex items-center gap-2">
-          <Flame className="h-4 w-4 text-peri" />
-          <h3 className="font-display text-base font-bold text-text">Overview & About</h3>
+        <div className="border-b border-white/8 bg-surface2/50 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-[#5865F2]" />
+            <h3 className="font-display text-base font-bold text-text">Campus Squad & Friends Presence</h3>
+          </div>
+          <span className="rounded-md border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[10px] font-mono font-extrabold text-amber-300">
+            DEMO
+          </span>
         </div>
 
         <div className="grid p-5 gap-4 lg:grid-cols-4 items-start">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-muted">
-            Description
+            Friends Attending
           </span>
           {events.map((event) => (
             <div key={event.id} className="min-w-0">
-              <p className="text-xs leading-relaxed text-slate-300">
-                {event.description || event.blurb}
-              </p>
+              <DiscordFriendsBadge eventSlugOrId={event.slug} variant="compare" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 7: Structured Overview & Brief */}
+      <section className="overflow-hidden rounded-2xl border border-white/8 bg-surface shadow-lg">
+        <div className="border-b border-white/8 bg-surface2/50 px-6 py-4 flex items-center gap-2">
+          <Flame className="h-4 w-4 text-peri" />
+          <h3 className="font-display text-base font-bold text-text">Structured Overview & Verified Brief</h3>
+        </div>
+
+        <div className="grid p-5 gap-4 lg:grid-cols-4 items-start">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-muted">
+            Executive Brief
+          </span>
+          {events.map((event) => (
+            <div key={event.id} className="min-w-0">
+              <FormattedOverview
+                text={event.description}
+                blurb={event.blurb}
+                title={event.title}
+                mode="compact"
+              />
             </div>
           ))}
         </div>
