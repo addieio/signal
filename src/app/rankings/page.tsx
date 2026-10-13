@@ -391,7 +391,7 @@ export default function RankingsPage() {
                 </span>
               </h2>
 
-              <div className="grid grid-cols-3 gap-1.5 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 {rankedList.slice(0, 3).map(({ event, ranking }, rankIndex) => {
                   const podiumColors = [
                     "from-amber-400/20 via-surface to-surface border-amber-400/40 text-amber-300",
@@ -477,7 +477,7 @@ export default function RankingsPage() {
           {rankedList.length > 0 ? (
             <motion.div
               layout
-              className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-5"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6"
             >
               {rankedList.map(({ event, ranking, isPreferredHub }, index) => (
                 <EventCard

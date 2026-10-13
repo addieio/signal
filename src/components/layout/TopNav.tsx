@@ -7,6 +7,7 @@ import { Bot, Compass, Medal, Moon, Scale, Search, Sparkles, Sun } from "lucide-
 import { useCompareStore } from "@/store/compareStore";
 import { useTheme } from "@/components/ThemeProvider";
 import { DiscordNavButton } from "@/components/DiscordNavButton";
+import { GoogleAuthButton } from "@/components/GoogleAuthButton";
 
 export function TopNav() {
   const pathname = usePathname();
@@ -65,7 +66,10 @@ export function TopNav() {
         </nav>
 
         {/* Right Actions: Theme Toggle & Preferences */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
+          {/* Supabase Google Auth Button */}
+          <GoogleAuthButton />
+
           {/* Discord Squad Presence (Demo) */}
           <DiscordNavButton />
 

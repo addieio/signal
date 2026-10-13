@@ -23,6 +23,7 @@ import { computeRanking } from "@/lib/ranking";
 import { GradientPoster } from "@/components/GradientPoster";
 import { FormattedOverview } from "@/components/FormattedOverview";
 import { DiscordFriendsBadge } from "@/components/DiscordFriendsBadge";
+import { GoogleCalendarButton } from "@/components/GoogleCalendarButton";
 
 function FactCard({
   icon: Icon,
@@ -156,38 +157,43 @@ export default function EventPage() {
             </div>
 
             {/* CTAs */}
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a
-                href={event.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-hover shadow-lg shadow-primary/25"
-              >
-                <span>Apply on Official Website</span>
-                <ExternalLink className="h-4 w-4" aria-hidden="true" />
-              </a>
+            <div className="mt-6 flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href={event.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-hover shadow-lg shadow-primary/25"
+                >
+                  <span>Apply on Official Website</span>
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                </a>
 
-              <button
-                type="button"
-                onClick={toggleCompare}
-                className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border px-5 text-sm font-bold transition ${
-                  compared
-                    ? "border-peri bg-peri/20 text-white"
-                    : "border-white/10 bg-surface2 text-slate-200 hover:border-peri/40 hover:bg-surface3"
-                }`}
-              >
-                {compared ? (
-                  <>
-                    <Check className="h-4 w-4 text-lime" />
-                    <span>In Compare</span>
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 text-peri" />
-                    <span>Compare</span>
-                  </>
-                )}
-              </button>
+                <button
+                  type="button"
+                  onClick={toggleCompare}
+                  className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border px-5 text-sm font-bold transition ${
+                    compared
+                      ? "border-peri bg-peri/20 text-white"
+                      : "border-white/10 bg-surface2 text-slate-200 hover:border-peri/40 hover:bg-surface3"
+                  }`}
+                >
+                  {compared ? (
+                    <>
+                      <Check className="h-4 w-4 text-lime" />
+                      <span>In Compare</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 text-peri" />
+                      <span>Compare</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Add to Google Calendar */}
+              <GoogleCalendarButton event={event} />
             </div>
           </div>
         </div>

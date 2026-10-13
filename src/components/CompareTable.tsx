@@ -21,6 +21,7 @@ import { computeRanking } from "@/lib/ranking";
 import { GradientPoster } from "./GradientPoster";
 import { FormattedOverview } from "./FormattedOverview";
 import { DiscordFriendsBadge } from "./DiscordFriendsBadge";
+import { GoogleCalendarButton } from "./GoogleCalendarButton";
 
 interface CompareTableProps {
   events: Event[];
@@ -114,16 +115,19 @@ export function CompareTable({ events, profile, onRemove }: CompareTableProps) {
                   <DiscordFriendsBadge eventSlugOrId={event.slug} variant="card" />
                 </div>
 
-                {/* Direct Official Link */}
-                <a
-                  href={event.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-bold text-white transition hover:bg-primary-hover shadow-md shadow-primary/20"
-                >
-                  <span>Open Official Page</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+                {/* Actions: Direct Official Link & Google Calendar */}
+                <div className="mt-4 flex items-center gap-2">
+                  <a
+                    href={event.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-primary px-3 text-xs font-bold text-white transition hover:bg-primary-hover shadow-md shadow-primary/20"
+                  >
+                    <span>Official Page</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                  <GoogleCalendarButton event={event} variant="icon" />
+                </div>
               </div>
             </div>
           );

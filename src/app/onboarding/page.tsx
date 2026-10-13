@@ -318,7 +318,7 @@ export default function OnboardingPage() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
-              className="rounded-3xl border border-white/12 bg-surface/85 backdrop-blur-xl p-3 sm:p-8 shadow-2xl shadow-black/40"
+              className="rounded-2xl sm:rounded-3xl border border-white/12 bg-surface/85 backdrop-blur-xl p-4 sm:p-8 shadow-2xl shadow-black/40"
             >
               <QuizStep
                 key="quiz-active"
