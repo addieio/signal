@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -30,6 +31,11 @@ export function DiscordConnectModal({ isOpen, onClose }: DiscordConnectModalProp
   const { isConnected, user, connectDiscord, disconnectDiscord } = useDiscordStore();
   const { events } = useCatalog();
   const [activeTab, setActiveTab] = useState<"friends" | "hackathons">("friends");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Handle ESC key press to close modal
   useEffect(() => {
@@ -104,27 +110,27 @@ export function DiscordConnectModal({ isOpen, onClose }: DiscordConnectModalProp
     return list.sort((a, b) => b.friends.length - a.friends.length);
   }, [events]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto p-2 sm:p-4 md:p-6 flex min-h-full items-start sm:items-center justify-center">
-        {/* Backdrop with click-to-close */}
+      <div className="fixed inset-0 z-[9999] overflow-y-auto p-3 sm:p-5 md:p-6 flex min-h-full items-center justify-center">
+        {/* Full-screen backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-md"
+          className="fixed inset-0 bg-black/85 backdrop-blur-md"
         />
 
-        {/* Modal Window Container - fully responsive, never vertically clipped */}
+        {/* Modal Window Container */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: "spring", stiffness: 350, damping: 25 }}
-          className="relative w-full max-w-2xl my-auto max-h-[calc(100dvh-1rem)] sm:max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl border border-[#5865F2]/40 bg-surface shadow-2xl shadow-[#5865F2]/25 overflow-hidden z-10"
+          className="relative w-full max-w-2xl my-auto max-h-[calc(100dvh-2rem)] sm:max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl border border-[#5865F2]/40 bg-surface shadow-2xl shadow-[#5865F2]/30 overflow-hidden z-10"
         >
           {/* Ambient Background Glow */}
           <div className="absolute -top-24 -left-24 h-48 w-48 rounded-full bg-[#5865F2]/20 blur-3xl pointer-events-none" />
@@ -448,6 +454,7 @@ export function DiscordConnectModal({ isOpen, onClose }: DiscordConnectModalProp
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
