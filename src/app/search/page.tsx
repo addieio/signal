@@ -51,7 +51,7 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg text-text pb-28 pt-24">
+    <div className="min-h-screen bg-bg text-text pb-28 pt-8 sm:pt-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Link
           href="/home"
@@ -142,6 +142,6 @@ export default function SearchPage() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

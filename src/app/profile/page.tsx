@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const userReviews = useMemo(() => repository.getUserReviews(), []);
 
   return (
-    <div className="min-h-screen bg-bg text-text pt-24 pb-32 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+    <div className="min-h-screen bg-bg text-text pt-8 sm:pt-12 pb-32 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       {/* Top Banner */}
       <div className="p-6 sm:p-8 rounded-3xl bg-surface border border-white/12 shadow-2xl relative overflow-hidden mb-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-lime/10 rounded-full blur-3xl pointer-events-none" />

@@ -1,106 +1,224 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { LogIn, LogOut, User as UserIcon, Check } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  Sparkles,
+  ChevronDown,
+  ShieldCheck,
+  Compass,
+  Users,
+} from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { useDiscordStore } from "@/store/discordStore";
 import { SupabaseAuthModal } from "./SupabaseAuthModal";
+import { DiscordConnectModal } from "./DiscordConnectModal";
 
 export function GoogleAuthButton() {
-  const { user, initialize, signInWithGoogle, signOut, setShowConfigModal, isConfigured } = useAuthStore();
+  const { user, initialize, setShowConfigModal } = useAuthStore();
+  const signOut = useAuthStore((state) => state.signOut);
+  const { isConnected, user: discordUser, friends } = useDiscordStore();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [discordModalOpen, setDiscordModalOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     initialize();
   }, [initialize]);
 
-  const handleLoginClick = () => {
-    if (!isConfigured) {
-      setShowConfigModal(true);
-    } else {
-      signInWithGoogle();
+  // Click outside listener
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
     }
-  };
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  // Escape key listener
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [dropdownOpen]);
 
   return (
     <>
       {user ? (
-        <div className="relative shrink-0">
+        <div ref={dropdownRef} className="relative shrink-0">
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-white/10 bg-surface2 px-2 sm:px-2.5 py-1.5 text-xs font-bold text-text hover:border-peri/40 transition cursor-pointer shadow-xs shrink-0"
+            className={`inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 sm:gap-2 rounded-xl border px-2 sm:px-2.5 py-1 text-xs font-semibold text-text transition-all duration-200 cursor-pointer shadow-xs shrink-0 active:scale-95 ${
+              dropdownOpen
+                ? "border-peri/60 bg-surface2 ring-2 ring-peri/20"
+                : "border-white/10 dark:border-white/10 border-slate-200/80 bg-surface2/60 hover:border-peri/40 hover:bg-surface2"
+            }`}
+            aria-expanded={dropdownOpen}
+            aria-haspopup="true"
+            aria-label="User account menu"
           >
-            {user.avatarUrl ? (
-              <img
-                src={user.avatarUrl}
-                alt={user.name}
-                className="h-5 w-5 sm:h-6 sm:w-6 rounded-full object-cover ring-1 ring-peri/50 shrink-0"
-              />
-            ) : (
-              <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold shrink-0">
-                {user.name[0]?.toUpperCase()}
-              </div>
-            )}
-            <span className="hidden lg:inline truncate max-w-[100px]">{user.name.split(" ")[0]}</span>
-            {user.isDemo && (
-              <span className="text-[9px] font-mono bg-amber-400/20 text-amber-300 px-1 rounded uppercase">
-                DEMO
-              </span>
-            )}
+            <div className="relative shrink-0">
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name}
+                  className="h-5 w-5 sm:h-6 sm:w-6 rounded-full object-cover ring-1 ring-peri/50 shrink-0"
+                />
+              ) : (
+                <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-gradient-to-tr from-primary to-peri flex items-center justify-center text-[10px] text-white font-bold shrink-0">
+                  {user.name[0]?.toUpperCase()}
+                </div>
+              )}
+              <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-pos border border-surface ring-1 ring-bg" />
+            </div>
+
+            <span className="hidden sm:inline truncate max-w-[85px] font-medium text-text">
+              {user.name.split(" ")[0]}
+            </span>
+
+            <ChevronDown
+              className={`h-3 w-3 text-muted transition-transform duration-200 ${
+                dropdownOpen ? "rotate-180 text-peri" : ""
+              }`}
+            />
           </button>
 
-          {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-white/10 bg-surface p-2 shadow-2xl z-50">
-              <div className="px-3 py-2 border-b border-white/8 mb-1">
-                <p className="text-xs font-bold text-text truncate">{user.name}</p>
-                <p className="text-[10px] text-muted truncate">{user.email}</p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDropdownOpen(false);
-                  signOut();
-                }}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-neg hover:bg-neg/10 transition cursor-pointer"
+          {/* Luxury Account Dropdown Menu */}
+          <AnimatePresence>
+            {dropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/12 dark:border-white/12 border-slate-200 bg-surface/95 dark:bg-surface/95 backdrop-blur-xl p-2 shadow-2xl shadow-black/40 z-50 overflow-hidden"
               >
-                <LogOut className="h-3.5 w-3.5" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          )}
+                {/* User Card */}
+                <div className="p-3 rounded-xl bg-surface2/60 dark:bg-surface2/60 border border-white/6 mb-1.5">
+                  <div className="flex items-center gap-2.5">
+                    {user.avatarUrl ? (
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.name}
+                        className="h-9 w-9 rounded-full object-cover ring-1 ring-peri/50 shrink-0"
+                      />
+                    ) : (
+                      <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-xs text-white font-bold shrink-0">
+                        {user.name[0]?.toUpperCase()}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-text truncate">{user.name}</p>
+                      <p className="text-[10px] text-muted truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-lime/15 border border-lime/30 px-2 py-0.5 text-[9px] font-mono font-bold uppercase text-lime">
+                      <ShieldCheck className="h-2.5 w-2.5" />
+                      {user.isDemo ? "Demo Builder" : "Verified"}
+                    </span>
+                    {isConnected && (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-[#5865F2]/20 border border-[#5865F2]/30 px-2 py-0.5 text-[9px] font-mono font-bold uppercase text-[#A5B4FC]">
+                        Squad Synced
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Primary Navigations within Account */}
+                <div className="space-y-0.5 py-1">
+                  <Link
+                    href="/profile"
+                    onClick={() => setDropdownOpen(false)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-text hover:bg-surface2 hover:text-peri transition"
+                  >
+                    <UserIcon className="h-4 w-4 text-peri shrink-0" />
+                    <span>My Profile & Reviews</span>
+                  </Link>
+
+                  <Link
+                    href="/onboarding"
+                    onClick={() => setDropdownOpen(false)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-text hover:bg-surface2 hover:text-lime transition"
+                  >
+                    <Sparkles className="h-4 w-4 text-lime shrink-0" />
+                    <span>Vibe Calibration & Preferences</span>
+                  </Link>
+
+                  {/* Discord Squad Presence in Dropdown */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setDiscordModalOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-text hover:bg-surface2 transition cursor-pointer text-left"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Users className="h-4 w-4 text-[#5865F2] shrink-0" />
+                      <span className="truncate">Campus Squad Presence</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-peri font-bold shrink-0">
+                      {isConnected ? `${friends.length} peers` : "Connect"}
+                    </span>
+                  </button>
+                </div>
+
+                <div className="my-1 border-t border-white/8 dark:border-white/8 border-slate-200" />
+
+                {/* Sign Out */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    signOut();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-neg hover:bg-neg/10 transition cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4 shrink-0" />
+                  <span>Sign Out</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
         <button
           type="button"
-          onClick={handleLoginClick}
-          className="inline-flex min-h-9 sm:min-h-10 items-center gap-1.5 sm:gap-2 rounded-xl border border-white/12 bg-white px-2.5 sm:px-3.5 text-xs font-bold text-gray-900 shadow-sm hover:bg-gray-100 transition active:scale-95 cursor-pointer shrink-0"
-          title="Sign in with Google via Supabase"
+          onClick={() => setShowConfigModal(true)}
+          className="inline-flex min-h-9 sm:min-h-10 items-center gap-2 rounded-xl border border-white/10 dark:border-white/10 border-slate-200/80 bg-surface2/60 hover:bg-surface2 hover:border-peri/40 px-3 sm:px-3.5 text-xs font-bold text-text transition-all duration-200 shadow-xs active:scale-95 cursor-pointer shrink-0"
+          title="Sign in to Signal"
         >
-          <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          <span className="hidden sm:inline">Google Login</span>
-          <span className="sm:hidden text-[11px]">Login</span>
+          <LogIn className="h-3.5 w-3.5 text-peri shrink-0" />
+          <span>Sign In</span>
         </button>
       )}
 
+      {/* Auth Modal for signing in */}
       <SupabaseAuthModal />
+
+      {/* Discord Modal for squad management */}
+      <DiscordConnectModal isOpen={discordModalOpen} onClose={() => setDiscordModalOpen(false)} />
     </>
   );
 }

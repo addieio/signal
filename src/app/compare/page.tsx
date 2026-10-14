@@ -29,7 +29,7 @@ export default function ComparePage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg text-text pb-24 pt-24">
+    <div className="min-h-screen bg-bg text-text pb-24 pt-8 sm:pt-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Navigation Breadcrumb & Actions */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end border-b border-white/8 pb-6">
@@ -134,6 +134,6 @@ export default function ComparePage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

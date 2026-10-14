@@ -165,7 +165,7 @@ export default function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-white/8 pt-28 pb-12">
+      <section className="relative overflow-hidden border-b border-white/8 pt-8 sm:pt-12 pb-12">
         <div className="absolute inset-0 grid-bg opacity-70 pointer-events-none" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">

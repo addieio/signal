@@ -162,7 +162,7 @@ export function GenieChat() {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-text pb-32 md:pb-24 pt-24 transition-colors duration-250">
+    <div className="min-h-screen bg-bg text-text pb-32 md:pb-24 pt-8 sm:pt-12 transition-colors duration-250">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Genie Hero Title */}
         <div className="flex items-center gap-3.5 border-b border-white/8 pb-6">

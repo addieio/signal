@@ -90,7 +90,7 @@ export default function EventPage() {
   };
 
   return (
-    <main className="min-h-screen bg-bg text-text pb-28 pt-24">
+    <div className="min-h-screen bg-bg text-text pb-28 pt-8 sm:pt-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Back navigation */}
         <Link
@@ -264,6 +264,6 @@ export default function EventPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

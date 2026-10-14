@@ -152,7 +152,7 @@ export default function RankingsPage() {
     typeFilter !== "all";
 
   return (
-    <main className="min-h-screen bg-bg text-text pb-28 pt-24 transition-colors duration-250">
+    <div className="min-h-screen bg-bg text-text pb-28 pt-8 sm:pt-10 transition-colors duration-250">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <Link
           href="/home"
@@ -512,6 +512,6 @@ export default function RankingsPage() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
