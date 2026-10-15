@@ -1,6 +1,7 @@
 import type { CatalogSnapshot, Event, Review, SourceStatus } from "./types";
 import { INITIAL_CATALOG } from "./initialCatalog";
 import { SEED_EVENTS } from "./seed";
+import { getUserSavedReviews } from "./reviewScraper";
 
 function getEventGeoPriority(event: Event): number {
   const loc = `${event.city || ""} ${event.venue || ""} ${event.organizer?.name || ""}`;
@@ -181,5 +182,7 @@ export const repository = {
     }
   },
 
-  getUserReviews: (): Review[] => [],
+  getUserReviews: (): Review[] => {
+    return getUserSavedReviews();
+  },
 };

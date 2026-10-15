@@ -450,24 +450,53 @@ export function matchGenieEvents(
       : "";
 
   if (topResults.length > 0) {
+    let verdict = "";
     if (locationLabel && monthLabel) {
-      reply = `I found ${topResults.length} verified hackathons in ${locationLabel} during ${monthLabel} 2026. Here are direct registrations with authentic details:`;
+      verdict = `If you're competing in **${locationLabel}** during **${monthLabel} 2026**, timing and squad readiness are everything. Here are the authentic battlegrounds with verified developer caliber and real prize pools:`;
     } else if (locationLabel) {
-      reply = `Here are the top verified hackathons located strictly in ${locationLabel}:`;
-    } else if (monthLabel) {
-      reply = `Here are verified hackathons scheduled in ${monthLabel} 2026:`;
+      verdict = `Looking at the **${locationLabel}** circuit, the bar is high. You need clean architecture and an end-to-end working MVP to stand out against local top-tier teams. Here is where you should compete:`;
     } else if (isPrizeFocused) {
-      reply = `Here are the highest-bounty hackathons with verified cash prizes and incubation rewards:`;
+      verdict = `Here are the top cash-bounty hackathons. Remember: large prize pools attract seasoned teams—your differentiator will be shipping a live working prototype that solves a painful, real-world workflow in 36 hours.`;
     } else if (detectedTech.length > 0) {
-      reply = `Here are the top hackathons focused on ${detectedTech.map((t) => t.toUpperCase()).join(" & ")}:`;
+      verdict = `For **${detectedTech.map((t) => t.toUpperCase()).join(" & ")}**, generic wrappers won't win anymore. Judges look for multi-step agentic workflows, latency optimizations, and clean UX. Here are your best arenas:`;
     } else {
-      reply = `I found ${topResults.length} verified hackathons matching "${query}":`;
+      verdict = `Here's my senior breakdown of the best verified hackathons matching your search. Focus on events with experienced mentors and honest judging rubrics:`;
     }
+
+    reply = `### 🧠 Senior's Strategic Verdict
+${verdict}
+
+### 🏆 Prime Battlegrounds
+${topResults
+  .slice(0, 4)
+  .map(
+    (e) =>
+      `- **${e.title}** \`[${e.mode === "online" ? "Online" : e.city || "In-Person"} · ${e.dateLabel}]\`\n  - **The Play**: ${e.blurb || "High-caliber developer challenge with vetted track bounties."}\n  - **🎯 Winning Angle**: Focus on ${e.themes.slice(0, 3).join(", ") || "core architecture"} & live interactive demo.\n  - **Bounty**: ${e.prizeLabel || "Bounties & Perks"}`
+  )
+  .join("\n\n")}
+
+### ⚡ Senior's Tactical Playbook
+- **The 14-Hour Rule**: By hour 14, your core happy path API must run end-to-end. Never polish UI on a broken backend.
+- **The Pitch Secret**: Judges decide in the first 60 seconds. Start with a real user problem and live demo, not a 10-slide PowerPoint.
+- **Bounty Stacking**: Target the primary grand prize + 1 sponsor API track to maximize your winning surface area.`;
   } else if (locationHasEventsElsewhere) {
-    // Location exists, but no events in the requested month!
-    // Never show Ghaziabad or Meerut for Delhi! Show genuine Delhi alternatives.
     const rankedAlternatives = rankEvents(locationAlternativeEvents, profile).slice(0, 4).map((r) => r.event);
-    reply = `There are currently no verified in-person hackathons scheduled in ${locationLabel} specifically in ${monthLabel} 2026. Rather than suggesting unrelated cities, here are the top verified upcoming hackathons located in ${locationLabel}:`;
+    reply = `### 🧠 Senior's Strategic Verdict
+There are currently no verified in-person hackathons scheduled strictly in **${locationLabel}** for **${monthLabel} 2026**. As a senior, my rule is simple: **never attend questionable, unverified pop-up events**. 
+
+Here are the highest-rated upcoming hackathons confirmed in **${locationLabel}**:
+
+### 🏆 Verified Upcoming Arenas
+${rankedAlternatives
+  .map(
+    (e) =>
+      `- **${e.title}** \`[${e.city} · ${e.dateLabel}]\`\n  - **The Play**: Official registration verified on ${e.source.toUpperCase()}.\n  - **Bounty**: ${e.prizeLabel || "Bounties & Perks"}`
+  )
+  .join("\n\n")}
+
+### ⚡ Senior's Tactical Playbook
+- **Preparation Sprints**: Use this gap to assemble a balanced squad: 1 backend/systems builder + 1 UI/Figma designer + 1 pitch lead.
+- **Warm-up Bounties**: Test your stack in online MLH or Devfolio sprints before competing on campus.`;
 
     return {
       reply,
@@ -481,7 +510,6 @@ export function matchGenieEvents(
       },
     };
   } else {
-    // Honest zero-match response with top online alternatives
     const onlineFallbacks = rankEvents(
       events.filter((e) => e.mode === "online"),
       profile
@@ -489,7 +517,19 @@ export function matchGenieEvents(
       .slice(0, 3)
       .map((r) => r.event);
 
-    reply = `No verified hackathons were found matching "${query}". Rather than showing unrelated cities or fabricated dates, here are top verified global online hackathons you can join from anywhere:`;
+    reply = `### 🧠 Senior's Strategic Verdict
+No verified hackathons were found matching "${query}". Rather than showing fabricated dates or unvetted events, here are the top global online hackathons you can compete in right now from your laptop:
+
+### 🏆 Verified Global Online Arenas
+${onlineFallbacks
+  .map(
+    (e) =>
+      `- **${e.title}** \`[Online · ${e.dateLabel}]\`\n  - **The Play**: Global MLH / Devfolio developer challenge with distributed judging.\n  - **Bounty**: ${e.prizeLabel || "Bounties & Perks"}`
+  )
+  .join("\n\n")}
+
+### ⚡ Senior's Tactical Playbook
+- **Async Efficiency**: For remote hackathons, commit frequently, document your setup in README, and record a 2-minute Loom demo video early.`;
     return {
       reply,
       results: onlineFallbacks,

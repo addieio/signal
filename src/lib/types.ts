@@ -8,7 +8,26 @@ export type SkillLevel = "beginner" | "intermediate" | "advanced" | "any";
 export type EventSource = "devfolio" | "unstop" | "hackerearth" | "mlh" | "devpost" | "luma";
 export type RegistrationStatus = "open" | "upcoming" | "closed" | "unknown";
 
-export interface Review { id: string; author: { name: string; dept: string; year: number }; rating: 1 | 2 | 3 | 4 | 5; text: string; tags: VibeTag[]; createdAt: string; }
+export interface Review {
+  id: string;
+  author: {
+    name: string;
+    dept: string;
+    year: number;
+    college?: string;
+    avatarUrl?: string;
+    role?: string;
+  };
+  rating: 1 | 2 | 3 | 4 | 5;
+  text: string;
+  tags: VibeTag[];
+  createdAt: string;
+  platform?: string;
+  verifiedAttendee?: boolean;
+  helpfulCount?: number;
+  eventSlug?: string;
+  eventTitle?: string;
+}
 export interface Organizer { name: string; trustScore: number; pastEventCount: number; }
 
 /** A normalized listing. Every populated field comes from the named source. */

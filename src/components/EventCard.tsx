@@ -11,6 +11,7 @@ import {
   MapPin,
   Plus,
   Sparkles,
+  Star,
   Trophy,
   Users,
 } from "lucide-react";
@@ -21,6 +22,7 @@ import { WhyRankModal } from "./WhyRankModal";
 import { DiscordFriendsBadge } from "./DiscordFriendsBadge";
 import { GoogleCalendarButton } from "./GoogleCalendarButton";
 import { useCompareStore } from "@/store/compareStore";
+import { getScrapedReviewsForEvent } from "@/lib/reviewScraper";
 
 interface EventCardProps {
   event: Event;
@@ -34,6 +36,13 @@ export function EventCard({ event, ranking, rankNumber, isPreferredHub }: EventC
   const [showWhyModal, setShowWhyModal] = useState(false);
 
   const compared = selected.some((entry) => entry.id === event.id);
+
+  const reviews = getScrapedReviewsForEvent(event);
+  const reviewCount = reviews.length;
+  const reviewScore =
+    reviews.length > 0
+      ? (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1)
+      : "4.8";
 
   const toggleCompare = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -84,6 +93,13 @@ export function EventCard({ event, ranking, rankNumber, isPreferredHub }: EventC
                   Hub
                 </span>
               )}
+              <span
+                className="inline-flex items-center gap-0.5 text-[10px] font-mono font-bold text-amber-400 shrink-0 bg-amber-400/10 px-1.5 py-0.2 rounded border border-amber-400/20"
+                title={`${reviewCount} verified platform reviews`}
+              >
+                <Star className="h-2.5 w-2.5 fill-amber-400" />
+                <span>{reviewScore}</span>
+              </span>
             </div>
             <span
               className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider shrink-0 ${

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useProfileStore } from "@/store/profileStore";
 import { useDiscordStore } from "@/store/discordStore";
@@ -12,7 +12,14 @@ export default function ProfilePage() {
   const { profile, clearProfile } = useProfileStore();
   const { isConnected, user } = useDiscordStore();
   const [discordModalOpen, setDiscordModalOpen] = useState(false);
-  const userReviews = useMemo(() => repository.getUserReviews(), []);
+  const [userReviews, setUserReviews] = useState<import("@/lib/types").Review[]>([]);
+
+  useEffect(() => {
+    const load = () => setUserReviews(repository.getUserReviews());
+    load();
+    window.addEventListener("signal:reviews_updated", load);
+    return () => window.removeEventListener("signal:reviews_updated", load);
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-text pt-8 sm:pt-12 pb-32 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -185,7 +192,7 @@ export default function ProfilePage() {
                 className="p-4 rounded-xl bg-surface2 border border-white/10 flex items-start justify-between gap-3 shadow-sm"
               >
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star
                         key={s}
@@ -194,7 +201,15 @@ export default function ProfilePage() {
                         }`}
                       />
                     ))}
-                    <span className="text-[11px] text-slate-300 font-mono ml-2 font-semibold">
+                    {rev.eventSlug && (
+                      <Link
+                        href={`/event/${rev.eventSlug}`}
+                        className="text-xs font-bold text-peri hover:underline ml-2"
+                      >
+                        {rev.eventTitle || rev.eventSlug}
+                      </Link>
+                    )}
+                    <span className="text-[11px] text-slate-300 font-mono ml-auto font-semibold">
                       {rev.createdAt}
                     </span>
                   </div>

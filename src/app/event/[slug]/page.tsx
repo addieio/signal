@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useCatalog } from "@/lib/useCatalog";
+import { BASE_SNAPSHOT } from "@/lib/repository";
 import { useProfileStore } from "@/store/profileStore";
 import { useCompareStore } from "@/store/compareStore";
 import { computeRanking } from "@/lib/ranking";
@@ -24,6 +25,7 @@ import { GradientPoster } from "@/components/GradientPoster";
 import { FormattedOverview } from "@/components/FormattedOverview";
 import { DiscordFriendsBadge } from "@/components/DiscordFriendsBadge";
 import { GoogleCalendarButton } from "@/components/GoogleCalendarButton";
+import { CommunityReviewsSection } from "@/components/CommunityReviewsSection";
 
 function FactCard({
   icon: Icon,
@@ -57,7 +59,9 @@ export default function EventPage() {
   const { selected, addEvent, removeEvent } = useCompareStore();
 
   const event = useMemo(
-    () => snapshot.events.find((candidate) => candidate.slug === params.slug || candidate.id === params.slug),
+    () =>
+      snapshot.events.find((candidate) => candidate.slug === params.slug || candidate.id === params.slug) ||
+      BASE_SNAPSHOT.events.find((candidate) => candidate.slug === params.slug || candidate.id === params.slug),
     [snapshot.events, params.slug]
   );
 
@@ -263,6 +267,9 @@ export default function EventPage() {
             </div>
           </div>
         </section>
+
+        {/* Multi-Platform Community Reviews & Sentiment Radar */}
+        <CommunityReviewsSection event={event} />
       </div>
     </div>
   );

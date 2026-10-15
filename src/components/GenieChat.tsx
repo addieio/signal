@@ -37,6 +37,76 @@ const PROMPT_SUGGESTIONS = [
   "Global MLH season hackathons",
 ];
 
+function renderInlineTokens(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="font-bold text-text">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code
+          key={i}
+          className="font-mono text-[11px] bg-white/10 dark:bg-white/10 px-1.5 py-0.5 rounded text-peri border border-white/8"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
+}
+
+function renderMarkdownContent(content: string) {
+  const lines = content.split("\n");
+  return lines.map((line, idx) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith("### ")) {
+      const headingText = trimmed.replace("### ", "");
+      const isVerdict = headingText.includes("Verdict") || headingText.includes("Briefing");
+      const isPlaybook = headingText.includes("Playbook") || headingText.includes("Tips");
+      return (
+        <h3
+          key={idx}
+          className={`font-display text-xs sm:text-sm font-bold uppercase tracking-wider mt-3.5 mb-1.5 flex items-center gap-1.5 ${
+            isVerdict
+              ? "text-lime"
+              : isPlaybook
+              ? "text-amber-400"
+              : "text-peri"
+          }`}
+        >
+          <span>{headingText}</span>
+        </h3>
+      );
+    }
+
+    if (trimmed.startsWith("- ")) {
+      const itemText = trimmed.slice(2);
+      return (
+        <li key={idx} className="ml-4 list-disc text-xs sm:text-sm text-slate-200 my-1 leading-relaxed">
+          {renderInlineTokens(itemText)}
+        </li>
+      );
+    }
+
+    if (!trimmed) {
+      return <div key={idx} className="h-1.5" />;
+    }
+
+    return (
+      <p key={idx} className="text-xs sm:text-sm text-slate-200 leading-relaxed my-1">
+        {renderInlineTokens(line)}
+      </p>
+    );
+  });
+}
+
 function TypewriterBubble({ text, isLatest }: { text: string; isLatest: boolean }) {
   const [displayed, setDisplayed] = useState(isLatest ? "" : text);
 
@@ -47,9 +117,9 @@ function TypewriterBubble({ text, isLatest }: { text: string; isLatest: boolean 
     }
 
     let i = 0;
-    const speed = text.length > 200 ? 10 : 18;
+    const speed = text.length > 200 ? 8 : 15;
     const interval = setInterval(() => {
-      i += 2;
+      i += 3;
       if (i >= text.length) {
         setDisplayed(text);
         clearInterval(interval);
@@ -66,7 +136,7 @@ function TypewriterBubble({ text, isLatest }: { text: string; isLatest: boolean 
 
   return (
     <div className="relative">
-      <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{displayed}</p>
+      <div className="text-sm leading-relaxed">{renderMarkdownContent(displayed)}</div>
       {isLatest && displayed.length < text.length && (
         <span className="inline-block ml-0.5 text-lime font-mono animate-pulse font-bold">|</span>
       )}
@@ -84,7 +154,15 @@ export function GenieChat() {
     {
       id: "welcome",
       sender: "genie",
-      text: "Hello builder! I am Signal AI Genie, your personal hackathon discovery copilot grounded strictly in our verified global catalogue. Ask me for events by city (e.g., 'Delhi in October'), tech stack (AI, Web3), cash prize pool, or platform (Luma, MLH, Devfolio), and I'll find them for you.",
+      text: `### 🧠 Senior's Strategic Briefing
+Hey builder, welcome to the war room. I'm your Senior Hackathon Strategist on Signal.
+
+Whether you're targeting ₹10L+ in verified cash bounties, scoping out the Delhi/Pan-India circuit for fair judging, or need an MVP execution playbook for your next 36-hour sprint — ask me anything.
+
+### ⚡ Quick Senior Directives
+- **By Location**: "Delhi in-person hackathons this season" or "Bengaluru dev meetups"
+- **By Tech & Bounties**: "Top AI Agent hackathons" or "High prize pools with verified payouts"
+- **By Strategy**: "What MVP scope actually wins in 24 hours?"`,
       source: "signal_ai",
     },
   ]);
