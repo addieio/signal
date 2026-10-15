@@ -93,49 +93,7 @@ signal/
 └── tsconfig.json          # TypeScript compiler configuration
 ```
 
----
 
-## 🚀 Getting Started
-
-### 1. Prerequisites
-- **Node.js**: v18.17+ or v20+ recommended
-- **npm** or **pnpm**
-
-### 2. Clone and Install Dependencies
-
-```bash
-git clone https://github.com/your-username/signal.git
-cd signal
-npm install
-```
-
-### 3. Environment Variables (Optional for AI Copilot)
-
-Create a `.env.local` file in the root directory:
-
-```env
-# Optional: Enables Signal AI Genie reasoning
-GEMINI_API_KEY=your_api_key_here
-```
-
-*(If no API key is supplied, Signal Genie automatically and gracefully operates using its deterministic catalog radar matcher with zero downtime.)*
-
-### 4. Run Development Server
-
-```bash
-npm run dev
-```
-
-Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-### 5. Build for Production
-
-```bash
-npm run build
-npm run start
-```
-
----
 
 ## 🛡️ License
 
